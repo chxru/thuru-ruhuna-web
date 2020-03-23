@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "sapper dev",
     "watch:tailwind": "postcss static/tailwind.css -o static/index.css -w",
-    "build:tailwind": "NODE_ENV=production postcss static/tailwind.css -o static/index.css" ,
+    "build:tailwind": "NODE_ENV=production postcss static/tailwind.css -o static/index.css",
     "build": "npm run build:tailwind && sapper build --legacy && cp -R ./__sapper__/build ./functions/__sapper__",
     "prebuild": "rm -rf functions/__sapper__/build && mkdir -p functions/__sapper__/build",
     "export": "sapper export --legacy",
@@ -36,7 +36,7 @@
     "rollup": "^1.20.0",
     "rollup-plugin-babel": "^4.0.2",
     "rollup-plugin-svelte": "^5.0.1",
-    "rollup-plugin-terser": "^4.0.4",
+    "rollup-plugin-terser": "^5.3.0",
     "sapper": "^0.27.0",
     "svelte": "^3.0.0",
     "tailwindcss": "^1.2.0"
