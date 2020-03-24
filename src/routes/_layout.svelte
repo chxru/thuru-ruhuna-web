@@ -1,22 +1,12 @@
 <script>
-	import Nav from '../components/Nav.svelte';
-
-	export let segment;
+  import Topbar from "../components/topbar/Topbar.svelte";
+  import Sidebar from "../components/sidebar/Sidebar.svelte";
 </script>
 
-<style>
-	main {
-		position: relative;
-		max-width: 56em;
-		background-color: white;
-		padding: 2em;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-</style>
-
-<Nav {segment}/>
-
-<main>
-	<slot></slot>
-</main>
+<div class="h-screen bg-gray">
+  <Topbar />
+  <Sidebar />
+  <div class="h-screen pt-20">
+    <slot />
+  </div>
+</div>
