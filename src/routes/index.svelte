@@ -40,6 +40,6 @@
   class="flex flex-wrap content-start justify-center box-border h-auto bg-gray
   px-8">
   {#each posts as post}
-    <Post />
+    <Post data={post}/>
   {/each}
 </div>
