@@ -1,7 +1,15 @@
 <script>
+  import { onDestroy } from "svelte";
   import { goto } from "@sapper/app";
+  import { username } from "../../store";
 
-  export let name;
+  let name;
+
+  const unsubscribe = username.subscribe(value => {
+    name = value
+  })
+
+  onDestroy(unsubscribe)
 
   const navigateHome = async () => {
     await goto("/");

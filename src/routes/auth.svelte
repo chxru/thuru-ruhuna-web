@@ -9,15 +9,16 @@
 
   function signIn() {
     auth
-      .signInWithEmailAndPassword(email, password)
+      .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(() => {
-        console.log(auth.currentUser.uid);
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .get()
-          .then(doc => {
-            userDetails.set(doc.data());
-          });
+        return auth.signInWithEmailAndPassword(email, password).then(() => {
+          db.collection("users")
+            .doc(auth.currentUser.uid)
+            .get()
+            .then(doc => {
+              userDetails.set(doc.data());
+            });
+        });
       })
       .catch(e => console.error(e.code, e.message));
   }

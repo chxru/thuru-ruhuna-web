@@ -7,3 +7,8 @@ export const username = derived(
   userDetails,
   $userDetails => ($userDetails.fname) ? `${$userDetails.fname} ${$userDetails.lname}` : 'Sign In'
 );
+
+export const isLoggedIn = derived(
+  userDetails,
+  $userDetails => ($userDetails.fname) ? true : false
+)
