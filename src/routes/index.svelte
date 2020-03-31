@@ -1,17 +1,23 @@
 <script>
-  import { onMount, onDestroy } from "svelte";
-  import { postsArr } from "../store/";
+  import { onDestroy } from "svelte";
+  import { postsArr, isLoggedIn } from "../store/";
 
   import Post from "../components/grid/Post.svelte";
+  import NewPost from "../components/grid/NewPost.svelte";
 
   const db = firebase.firestore();
   const ppq = 9; // post-per-query
+
   let posts;
   $: posts;
+  let isLogged;
 
-  const unsubscribe = postsArr.subscribe(value => {
+  const unsubscribe_isLoggedIn = isLoggedIn.subscribe(value => {
+    isLogged = value;
+  });
+
+  const unsubscribe_postArr = postsArr.subscribe(value => {
     posts = value;
-    console.log(posts);
 
     if (posts.length == 0) {
       db.collection("posts")
@@ -20,7 +26,7 @@
         .get()
         .then(snapshot => {
           snapshot.forEach(doc => {
-            posts = [...posts, doc.data()]
+            posts = [...posts, doc.data()];
           });
           postsArr.set(posts);
         })
@@ -28,7 +34,10 @@
     }
   });
 
-  onDestroy(unsubscribe);
+  onDestroy(() => {
+    unsubscribe_isLoggedIn();
+    unsubscribe_postArr();
+  });
 </script>
 
 <svelte:head>
@@ -40,6 +49,10 @@
   class="flex flex-wrap content-start justify-center box-border h-auto bg-gray
   px-8">
   {#each posts as post}
-    <Post data={post}/>
+    <Post data={post} />
   {/each}
 </div>
+
+{#if isLogged}
+  <NewPost />
+{/if}
