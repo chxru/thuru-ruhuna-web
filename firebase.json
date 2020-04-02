@@ -14,5 +14,8 @@
       "source": "**",
       "function": "ssr"
     }]
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }
