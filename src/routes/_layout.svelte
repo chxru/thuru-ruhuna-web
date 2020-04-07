@@ -34,7 +34,7 @@
 <div class="h-screen bg-gray">
   <Topbar />
   <Sidebar />
-  <div class="h-screen pt-20">
+  <div class="h-screen pt-4">
     <slot />
   </div>
 </div>

@@ -30,7 +30,7 @@
 </script>
 
 <div
-  class="flex fixed justify-between h-24 z-20 w-full px-8 py-8 md:pl-12 bg-gray">
+  class="flex justify-between h-24 w-full px-8 py-8 md:pl-12 bg-gray">
   <div class="flex flex-no-wrap font-sans text-xl text-black cursor-pointer">
     <img src="/leaves.svg" class="h-8 mr-4" alt="Thuru Ruhuna Logo" />
     <span class="w-full" on:click={navigateHome}>Thuru Ruhuna</span>
