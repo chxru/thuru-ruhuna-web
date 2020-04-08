@@ -5,7 +5,7 @@
 
   let name;
   let isLogged;
-  let isDropdown;
+  let isDropdown = false;
 
   const unsubscribe = username.subscribe(value => {
     name = value;
@@ -22,6 +22,7 @@
   };
 
   const signout = () => {
+    isDropdown = false;
     firebase
       .auth()
       .signOut()
