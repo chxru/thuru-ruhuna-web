@@ -1,15 +1,17 @@
 <script>
   import { onDestroy } from "svelte";
   import { goto } from "@sapper/app";
-  import { username, userDetails } from "../../store";
+  import { userDetails } from "../../store";
 
   let name;
   let isLogged;
+  let userImgURL;
   let isDropdown = false;
 
-  const unsubscribe = username.subscribe(value => {
-    name = value;
-    isLogged = name == "Sign In" ? false : true;
+  const unsubscribe = userDetails.subscribe(value => {
+    name = value.name || "Sign In";
+    userImgURL = value.photoURL || "/defaultuser.webp";
+    isLogged = value.name ? true : false;
   });
 
   onDestroy(unsubscribe);
@@ -49,8 +51,8 @@
     <span class="hidden md:inline" on:click={navigateAuth}>{name}</span>
     {#if isLogged}
       <img
-        src="/defaultuser.webp"
-        class="h-8 ml-4 rounded-full hidden md:inline object-cover"
+        src={userImgURL}
+        class="h-8 w-8 ml-4 rounded-full hidden md:inline object-cover"
         alt="user's image" />
       <img
         src="/down-arrow.svg"

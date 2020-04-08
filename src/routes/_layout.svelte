@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import { username, userDetails, isLoggedIn } from "../store";
+  import { userDetails, isLoggedIn } from "../store";
 
   import Topbar from "../components/topbar/Topbar.svelte";
   import Sidebar from "../components/sidebar/Sidebar.svelte";
