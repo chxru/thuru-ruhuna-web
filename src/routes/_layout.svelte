@@ -4,6 +4,7 @@
 
   import Topbar from "../components/topbar/Topbar.svelte";
   import Sidebar from "../components/sidebar/Sidebar.svelte";
+  import Alert from "../components/alert/Alert.svelte";
 
   let isLogged;
 
@@ -37,4 +38,5 @@
   <div class="h-screen pt-4">
     <slot />
   </div>
+  <Alert />
 </div>
