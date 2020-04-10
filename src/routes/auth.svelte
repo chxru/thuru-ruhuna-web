@@ -1,45 +1,75 @@
 <script>
   import { goto } from "@sapper/app";
-  import { userDetails } from "../store/";
+  import { userDetails, errors } from "../store/";
 
   const auth = firebase.auth();
   const db = firebase.firestore();
 
-  const createNewUser = user => {
-    const docRef = db.collection("users").doc(user.uid);
-    const Obj = {
-      name: user.displayName,
-      email: user.email,
-      photoURL: user.photoURL,
-      createdOn: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    docRef.set(Obj).then(async () => {
-      await goto("/profile/edit");
+  const createNewUser = (Obj, uid) => {
+    const docRef = db.collection("users").doc(uid);
+    docRef
+      .set({
+        ...Obj,
+        createdOn: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(async () => {
+        await goto("/profile/edit");
+      })
+      .catch(e => {
+        $errors = [
+          ...$errors,
+          { title: "Error on user-create firestore", msg: e }
+        ];
+      });
+  };
+
+  const firebaseAuth = provider => {
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+      return auth
+        .signInWithPopup(provider)
+        .then(result => {
+          const Obj = {
+            name: result.user.displayName,
+            email: result.additionalUserInfo.profile.email,
+            photoURL: result.user.photoURL
+          };
+          userDetails.set(Obj);
+          if (result.additionalUserInfo.isNewUser) {
+            createNewUser(Obj, result.user.uid);
+          } else {
+            goto("/");
+          }
+        })
+        .catch(e => {
+          $errors = [
+            ...$errors,
+            { title: "Error in authentication", msg: e.message }
+          ];
+        });
     });
   };
 
   const signInGoogle = async () => {
-    let provider = new firebase.auth.GoogleAuthProvider();
-    provider.addScope("profile");
-    provider.addScope("email");
+    try {
+      let provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope("profile");
+      provider.addScope("email");
 
-    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
-      return auth.signInWithPopup(provider).then(result => {
-        const ref = db.collection("users").doc(result.user.uid);
-        ref.get().then(snapshot => {
-          if (snapshot.exists) {
-            // returning user
-            ref.onSnapshot(doc => {
-              userDetails.set(doc.data());
-              goto("/");
-            });
-          } else {
-            // new user
-            createNewUser(result.user);
-          }
-        });
-      });
-    });
+      firebaseAuth(provider);
+    } catch (err) {
+      $errors = [...$errors, { title: "Authentication Failed", msg: err }];
+    }
+  };
+
+  const signInFacebook = () => {
+    try {
+      let provider = new firebase.auth.FacebookAuthProvider();
+      provider.addScope("email");
+
+      firebaseAuth(provider);
+    } catch (err) {
+      $errors = [...$errors, { title: "Authentication Failed", msg: err }];
+    }
   };
 </script>
 
@@ -56,7 +86,8 @@
       <button
         class="w-1/2 bg-white tracking-wide text-gray-800 font-bold rounded
         border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500
-        hover:text-white shadow-md py-2 px-6 mx-2 inline-flex items-center">
+        hover:text-white shadow-md py-2 px-6 mx-2 inline-flex items-center"
+        on:click={signInFacebook}>
         <span class="mx-auto">Facebook</span>
       </button>
       <button
