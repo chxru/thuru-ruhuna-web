@@ -49,6 +49,13 @@
   <div
     class="flex flex-no-wrap font-sans text-base text-gray-600 cursor-pointer">
     <span class="hidden md:inline" on:click={navigateAuth}>{name}</span>
+    {#if name == 'Sign In'}
+      <img
+        src="/login.svg"
+        class="h-4 mt-2 ml-4 inline"
+        alt="signin button"
+        on:click={navigateAuth} />
+    {/if}
     {#if isLogged}
       <img
         src={userImgURL}
