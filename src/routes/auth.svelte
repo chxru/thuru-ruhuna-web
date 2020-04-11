@@ -5,6 +5,15 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
 
+  let isLogged;
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      isLogged = true;
+    } else {
+      isLogged = false;
+    }
+  });
+
   const createNewUser = (Obj, uid) => {
     const docRef = db.collection("users").doc(uid);
     docRef
@@ -26,7 +35,7 @@
   const firebaseAuth = provider => {
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
       return auth
-        .signInWithPopup(provider)
+        .signInWithRedirect(provider)
         .then(result => {
           const Obj = {
             name: result.user.displayName,
@@ -71,6 +80,10 @@
       $errors = [...$errors, { title: "Authentication Failed", msg: err }];
     }
   };
+
+  const navigateHome = async () => {
+    await goto("/")
+  }
 </script>
 
 <svelte:head>
@@ -79,24 +92,39 @@
 
 <div class="flex flex-col m-0 text-center items-center relative">
   <div class="w-1/2">
-    <div class="text-lg py-16">
-      <h1>Login</h1>
-    </div>
-    <div class="flex flex-col md:flex-row justify-between">
-      <button
-        class="w-1/2 bg-white tracking-wide text-gray-800 font-bold rounded
-        border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500
-        hover:text-white shadow-md py-2 px-6 mx-2 inline-flex items-center"
-        on:click={signInFacebook}>
-        <span class="mx-auto">Facebook</span>
-      </button>
-      <button
-        class="w-1/2 bg-white tracking-wide text-gray-800 font-bold rounded
-        border-b-2 border-red-500 hover:border-red-600 hover:bg-red-500
-        hover:text-white shadow-md py-2 px-6 mx-2 inline-flex items-center"
-        on:click={signInGoogle}>
-        <span class="mx-auto">Google</span>
-      </button>
-    </div>
+    {#if !isLogged}
+      <div class="text-lg py-16">
+        <h1>Login</h1>
+      </div>
+      <div class="flex flex-col md:flex-row justify-between">
+        <button
+          class="w-1/2 bg-white tracking-wide text-gray-800 font-bold rounded
+          border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500
+          hover:text-white shadow-md py-2 px-6 mx-2 inline-flex items-center"
+          on:click={signInFacebook}>
+          <span class="mx-auto">Facebook</span>
+        </button>
+        <button
+          class="w-1/2 bg-white tracking-wide text-gray-800 font-bold rounded
+          border-b-2 border-red-500 hover:border-red-600 hover:bg-red-500
+          hover:text-white shadow-md py-2 px-6 mx-2 inline-flex items-center"
+          on:click={signInGoogle}>
+          <span class="mx-auto">Google</span>
+        </button>
+      </div>
+    {:else}
+      <div class="text-lg py-16">
+        <h1>Login Complete</h1>
+      </div>
+      <div class="flex flex-col md:flex-row justify-between">
+        <button
+          class="w-full bg-white tracking-wide text-gray-800 font-bold rounded
+          border-b-2 border-red-500 hover:border-red-600 hover:bg-red-500
+          hover:text-white shadow-md py-2 px-6 mx-2 inline-flex items-center"
+          on:click={navigateHome}>
+          <span class="mx-auto">Cool</span>
+        </button>
+      </div>
+    {/if}
   </div>
 </div>
