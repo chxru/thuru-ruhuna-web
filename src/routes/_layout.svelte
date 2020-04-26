@@ -33,7 +33,7 @@
   onDestroy(unsubscribe);
 </script>
 
-{#if !segment}
+{#if !segment || segment == "profile" || "auth"}
   <div class="h-screen bg-gray">
     <Topbar />
     <Sidebar />
