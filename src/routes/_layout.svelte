@@ -37,7 +37,7 @@
   <div class="h-screen bg-gray">
     <Topbar />
     <Sidebar />
-    <div class="h-screen pt-4">
+    <div class="h-screen pt-4 pl-0 md:pl-8">
       <slot />
     </div>
     <Alert />

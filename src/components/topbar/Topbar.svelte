@@ -22,6 +22,9 @@
   const navigateAuth = async () => {
     await goto("/auth");
   };
+  const navigateProfile = async () => {
+    await goto("/profile");
+  };
 
   const signout = () => {
     isDropdown = false;
@@ -48,15 +51,15 @@
   </div>
   <div
     class="flex flex-no-wrap font-sans text-base text-gray-600 cursor-pointer">
-    <span class="hidden md:inline" on:click={navigateAuth}>{name}</span>
-    {#if name == 'Sign In'}
+    {#if !isLogged}
+      <span class="hidden md:inline" on:click={navigateAuth}>Sign In</span>
       <img
         src="/login.svg"
         class="h-4 mt-2 ml-4 inline"
         alt="signin button"
         on:click={navigateAuth} />
-    {/if}
-    {#if isLogged}
+    {:else}
+      <span class="hidden md:inline" on:click={navigateProfile}>{name}</span>
       <img
         src={userImgURL}
         class="h-8 w-8 ml-4 rounded-full hidden md:inline object-cover"
