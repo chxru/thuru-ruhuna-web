@@ -28,11 +28,6 @@
 	     because `src/client.js` references it -->
   <div id='sapper'>%sapper.html%</div>
 
-  <!-- Sapper creates a <script> tag containing `src/client.js`
-	     and anything else it needs to hydrate the app and
-	     initialise the router -->
-  %sapper.scripts%
-
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script>
 
@@ -56,7 +51,10 @@
     firebase.initializeApp(firebaseConfig);
   </script>
 
-
+  <!-- Sapper creates a <script> tag containing `src/client.js`
+	     and anything else it needs to hydrate the app and
+	     initialise the router -->
+  %sapper.scripts%
 </body>
 
 </html>
