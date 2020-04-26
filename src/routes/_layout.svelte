@@ -7,6 +7,7 @@
   import Alert from "../components/alert/Alert.svelte";
 
   let isLogged;
+  export let segment;
 
   const unsubscribe = isLoggedIn.subscribe(value => {
     isLogged = value;
@@ -32,11 +33,13 @@
   onDestroy(unsubscribe);
 </script>
 
-<div class="h-screen bg-gray">
-  <Topbar />
-  <Sidebar />
-  <div class="h-screen pt-4">
-    <slot />
+{#if !segment}
+  <div class="h-screen bg-gray">
+    <Topbar />
+    <Sidebar />
+    <div class="h-screen pt-4">
+      <slot />
+    </div>
+    <Alert />
   </div>
-  <Alert />
-</div>
+{/if}
