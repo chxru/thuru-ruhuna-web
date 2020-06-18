@@ -1,24 +1,22 @@
 <script>
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { goto } from "@sapper/app";
-  import { userDetails } from "../../store";
   import Post from "../../components/grid/Post.svelte";
 
-  let name, userImgURL;
-  const unsubscribe = userDetails.subscribe(value => {
-    name = value.name || "Sign In";
-    userImgURL = value.photoURL || "/defaultuser.webp";
-  });
-
+  const auth = firebase.auth();
   const db = firebase.firestore();
   const ppq = 9; // post-per-query
   $: posts = [];
 
+  let USER = false;
+
   onMount(() => {
-    firebase.auth().onAuthStateChanged(async user => {
+    auth.onAuthStateChanged(user => {
       if (!user) {
-        await goto("/auth");
+        goto("/auth");
+        USER = false;
       }
+      USER = user;
       db.collection("posts")
         .where("user", "==", user.uid)
         .orderBy("timestamp", "desc")
@@ -32,23 +30,27 @@
         .catch(e => console.error(e));
     });
   });
-
-  onDestroy(unsubscribe);
 </script>
 
-<div class="flex flex-row items-center w-full px-8 mt-8 ">
-  <img
-    src={userImgURL}
-    alt={name}
-    class="h-32 w-32 rounded-full object-cover" />
-  <h1 class="text-2xl ml-12">{name}</h1>
-</div>
+<svelte:head>
+  <title>{USER.displayName + ' : Thuru Ruhuna' || 'Thuru Ruhuna'}</title>
+</svelte:head>
 
-<div
-  id="postContainer"
-  class="flex flex-wrap content-start justify-center box-border h-auto bg-gray
-  px-8 mt-12">
-  {#each posts as post}
-    <Post data={post} />
-  {/each}
-</div>
+{#if USER}
+  <div class="flex flex-row items-center w-full px-8 mt-8 ">
+    <img
+      src={USER.photoURL || '/defaultuser.webp'}
+      alt={USER.displayName}
+      class="h-32 w-32 rounded-full object-cover" />
+    <h1 class="text-2xl ml-12">{USER.displayName || 'Loading'}</h1>
+  </div>
+
+  <div
+    id="postContainer"
+    class="flex flex-wrap content-start justify-center box-border h-auto bg-gray
+    px-8 mt-12">
+    {#each posts as post}
+      <Post data={post} />
+    {/each}
+  </div>
+{/if}
