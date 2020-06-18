@@ -1,6 +1,6 @@
 <script>
   import { onDestroy } from "svelte";
-  import { postsArr, isLoggedIn } from "../store/";
+  import { postsArr } from "../store/";
 
   import Post from "../components/grid/Post.svelte";
   import NewPost from "../components/grid/NewPost.svelte";
@@ -10,11 +10,6 @@
 
   let posts;
   $: posts;
-  let isLogged;
-
-  const unsubscribe_isLoggedIn = isLoggedIn.subscribe(value => {
-    isLogged = value;
-  });
 
   const unsubscribe_postArr = postsArr.subscribe(value => {
     posts = value;
@@ -34,10 +29,7 @@
     }
   });
 
-  onDestroy(() => {
-    unsubscribe_isLoggedIn();
-    unsubscribe_postArr();
-  });
+  onDestroy(unsubscribe_postArr);
 </script>
 
 <svelte:head>
@@ -53,6 +45,4 @@
   {/each}
 </div>
 
-{#if isLogged}
-  <NewPost />
-{/if}
+<NewPost />
